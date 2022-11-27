@@ -1,3 +1,5 @@
 /app/.gradle/
 /app/.idea/
 /app/build/
+/.idea/
+/app/config/
