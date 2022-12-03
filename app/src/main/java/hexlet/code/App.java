@@ -18,7 +18,8 @@ public final class App implements Callable<Integer> {
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Show this help message and exit.")
     private boolean help;
 
-    @Option(names = {"-f", "--format"}, defaultValue = "stylish", description = "output format [default: ${DEFAULT-VALUE}]", paramLabel = "format")
+    @Option(names = {"-f", "--format"}, defaultValue = "stylish",
+            description = "output format [default: ${DEFAULT-VALUE}]", paramLabel = "format")
     private String format;
 
     @Parameters(index = "0", description = "path to first file", paramLabel = "filepath1")

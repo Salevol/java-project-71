@@ -28,7 +28,7 @@ public class Differ {
         return generate(filePath1, filePath2, "stylish");
     }
 
-    private static String checkNullValue (String key, Map map) {
+    private static String checkNullValue(String key, Map map) {
         String value = null;
         if (map.containsKey(key)) {
             value = map.get(key) == null ? "null" : map.get(key).toString();
