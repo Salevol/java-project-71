@@ -9,7 +9,7 @@ import java.util.Map;
 import static hexlet.code.utils.FileHandler.readFile;
 
 public class Parser {
-    public static Map<String, Object> parse(String filepath) throws IOException {
+    public static Map parse(String filepath) throws IOException {
         String extension = filepath.substring(filepath.lastIndexOf(".") + 1);
         switch (extension) {
             case "yml", "yaml" -> {
