@@ -18,26 +18,22 @@ public class Differ {
         Map<String, ElementDiff> diff = new TreeMap<>();
         Set<String> keys = new TreeSet<>(firstFile.keySet());
         keys.addAll(secondFile.keySet());
-        String oldValue;
-        String newValue;
         for (String key: keys) {
-            if (firstFile.containsKey(key)) {
-                oldValue = firstFile.get(key) == null ? "null" : firstFile.get(key).toString();
-            } else {
-                oldValue = null;
-            }
-            if (secondFile.containsKey(key)) {
-                newValue = secondFile.get(key) == null ? "null" : secondFile.get(key).toString();
-            } else {
-                newValue = null;
-            }
-            diff.put(key, new ElementDiff(oldValue, newValue));
+            diff.put(key, new ElementDiff(checkNullValue(key, firstFile), checkNullValue(key, secondFile)));
         }
 
         return buildStylishString(diff);
     }
     public static String generate(String filePath1, String filePath2) throws IOException {
         return generate(filePath1, filePath2, "stylish");
+    }
+
+    private static String checkNullValue (String key, Map map) {
+        String value = null;
+        if (map.containsKey(key)) {
+            value = map.get(key) == null ? "null" : map.get(key).toString();
+        }
+        return value;
     }
 
     public static String buildStylishString(final Map<String, ElementDiff> diff) {
