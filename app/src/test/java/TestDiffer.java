@@ -10,7 +10,7 @@ public class TestDiffer {
     public static final String JSON_FILEPATH2 = "src/test/resources/nested2.json";
     public static final String YAML_FILEPATH1 = "src/test/resources/nested1.yaml";
     public static final String YAML_FILEPATH2 = "src/test/resources/nested2.yaml";
-    public static final String expectedStylish = """
+    public static final String EXPECTED_STYLISH = """
 {
   chars1: [a, b, c]
 - chars2: [d, e, f]
@@ -37,7 +37,7 @@ public class TestDiffer {
 + setting3: none
 }       """;
 
-    public static final String expectedPlain = """
+    public static final String EXPECTED_PLAIN = """
 Property 'chars2' was updated. From [complex value] to false
 Property 'checked' was updated. From false to true
 Property 'default' was updated. From null to [complex value]
@@ -56,13 +56,13 @@ Property 'setting3' was updated. From true to 'none'
     @Test
     public void testGenerateFromJson() throws IOException {
         String actual = Differ.generate(JSON_FILEPATH1, JSON_FILEPATH2, "stylish");
-        assertThat(actual).isEqualTo(expectedStylish);
+        assertThat(actual).isEqualTo(EXPECTED_STYLISH);
         actual = Differ.generate(JSON_FILEPATH1, JSON_FILEPATH2, "plain");
-        assertThat(actual).isEqualTo(expectedPlain);
+        assertThat(actual).isEqualTo(EXPECTED_PLAIN);
         actual = Differ.generate(YAML_FILEPATH1, YAML_FILEPATH2, "stylish");
-        assertThat(actual).isEqualTo(expectedStylish);
+        assertThat(actual).isEqualTo(EXPECTED_STYLISH);
         actual = Differ.generate(YAML_FILEPATH1, YAML_FILEPATH2, "plain");
-        assertThat(actual).isEqualTo(expectedPlain);
+        assertThat(actual).isEqualTo(EXPECTED_PLAIN);
 
     }
 
