@@ -1,69 +1,53 @@
 import hexlet.code.Differ;
+import hexlet.code.utils.FileHandler;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestDiffer {
-    public static final String JSON_FILEPATH1 = "src/test/resources/nested1.json";
-    public static final String JSON_FILEPATH2 = "src/test/resources/nested2.json";
-    public static final String YAML_FILEPATH1 = "src/test/resources/nested1.yaml";
-    public static final String YAML_FILEPATH2 = "src/test/resources/nested2.yaml";
-    public static final String EXPECTED_STYLISH = """
-{
-  chars1: [a, b, c]
-- chars2: [d, e, f]
-+ chars2: false
-- checked: false
-+ checked: true
-- default: null
-+ default: [value1, value2]
-- id: 45
-+ id: null
-- key1: value1
-+ key2: value2
-  numbers1: [1, 2, 3, 4]
-- numbers2: [2, 3, 4, 5]
-+ numbers2: [22, 33, 44, 55]
-- numbers3: [3, 4, 5]
-+ numbers4: [4, 5, 6]
-+ obj1: {nestedKey=value, isNested=true}
-- setting1: Some value
-+ setting1: Another value
-- setting2: 200
-+ setting2: 300
-- setting3: true
-+ setting3: none
-}       """;
+    private static String expectedStylish;
+    private static String expectedPlain;
+    private static String expectedJson;
+    private final String jsonFilepath1 = "src/test/resources/nested1.json";
+    private final String jsonFilepath2 = "src/test/resources/nested2.json";
+    private final String yamlFilepath1 = "src/test/resources/nested1.yaml";
+    private final String yamlFilepath2 = "src/test/resources/nested2.yaml";
 
-    public static final String EXPECTED_PLAIN = """
-Property 'chars2' was updated. From [complex value] to false
-Property 'checked' was updated. From false to true
-Property 'default' was updated. From null to [complex value]
-Property 'id' was updated. From 45 to null
-Property 'key1' was removed
-Property 'key2' was added with value: 'value2'
-Property 'numbers2' was updated. From [complex value] to [complex value]
-Property 'numbers3' was removed
-Property 'numbers4' was added with value: [complex value]
-Property 'obj1' was added with value: [complex value]
-Property 'setting1' was updated. From 'Some value' to 'Another value'
-Property 'setting2' was updated. From 200 to 300
-Property 'setting3' was updated. From true to 'none'
-        """;
-
-    @Test
-    public void testGenerateFromJson() throws IOException {
-        String actual = Differ.generate(JSON_FILEPATH1, JSON_FILEPATH2, "stylish");
-        assertThat(actual).isEqualTo(EXPECTED_STYLISH);
-        actual = Differ.generate(JSON_FILEPATH1, JSON_FILEPATH2, "plain");
-        assertThat(actual).isEqualTo(EXPECTED_PLAIN);
-        actual = Differ.generate(YAML_FILEPATH1, YAML_FILEPATH2, "stylish");
-        assertThat(actual).isEqualTo(EXPECTED_STYLISH);
-        actual = Differ.generate(YAML_FILEPATH1, YAML_FILEPATH2, "plain");
-        assertThat(actual).isEqualTo(EXPECTED_PLAIN);
-
+    @BeforeAll
+    public static void readFiles() throws IOException {
+        expectedStylish = FileHandler.readFile("src/test/resources/expected_stylish");
+        expectedPlain = FileHandler.readFile("src/test/resources/expected_plain");
+        expectedJson = FileHandler.readFile("src/test/resources/expected_json");
     }
 
+    @Test
+    public void testJsonFormatter() throws IOException {
+        String actual = Differ.generate(jsonFilepath1, jsonFilepath2, "json");
+        assertThat(actual).isEqualTo(expectedJson);
+        actual = Differ.generate(yamlFilepath1, yamlFilepath2, "json");
+        assertThat(actual).isEqualTo(expectedJson);
+        assertThrows(IOException.class, () -> Differ.generate("nofile1.json", "nofile2.json"));
+    }
+
+    @Test
+    public void testStylishFormatter() throws IOException {
+        String actual = Differ.generate(jsonFilepath1, jsonFilepath2);
+        assertThat(actual).isEqualTo(expectedStylish);
+        actual = Differ.generate(jsonFilepath1, jsonFilepath2, "stylish");
+        assertThat(actual).isEqualTo(expectedStylish);
+        actual = Differ.generate(yamlFilepath1, yamlFilepath2, "stylish");
+        assertThat(actual).isEqualTo(expectedStylish);
+    }
+
+    @Test
+    public void testPlainFormatter() throws IOException {
+        String actual = Differ.generate(jsonFilepath1, jsonFilepath2, "plain");
+        assertThat(actual).isEqualTo(expectedPlain);
+        actual = Differ.generate(yamlFilepath1, yamlFilepath2, "plain");
+        assertThat(actual).isEqualTo(expectedPlain);
+    }
 }

@@ -26,7 +26,7 @@ public final class PlainFormatter implements Formatter {
                 result.append(String.format(UPDATED, key, checkObj(elem.getOldValue()), checkObj(elem.getNewValue())));
             }
         }
-        return result.toString();
+        return result.deleteCharAt(result.length() - 1).toString();
     }
 
     private static String checkObj(Object value) {
