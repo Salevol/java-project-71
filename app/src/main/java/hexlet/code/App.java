@@ -23,10 +23,10 @@ public final class App implements Callable<Integer> {
     private String format;
 
     @Parameters(index = "0", description = "path to first file", paramLabel = "filepath1")
-    String filePath1;
+    private String filePath1;
 
     @Parameters(index = "1", description = "path to second file", paramLabel = "filepath2")
-    String filePath2;
+    private String filePath2;
 
     @Override
     public Integer call() throws IOException {

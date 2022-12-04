@@ -2,7 +2,7 @@ package hexlet.code;
 
 import java.util.Objects;
 
-public class ElementDiff {
+public final class ElementDiff {
     private final Boolean updated;
     private final Boolean removed;
     private final Boolean added;
