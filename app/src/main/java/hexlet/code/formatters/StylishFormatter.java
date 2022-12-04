@@ -12,14 +12,14 @@ public final class StylishFormatter implements Formatter {
         for (String key: diff.keySet()) {
             ElementDiff elemDiff = diff.get(key);
             if (!elemDiff.isUpdated()) {
-                result.append(makeStylishLine("  ", key, elemDiff.getOldValue()));
+                result.append(makeStylishLine("    ", key, elemDiff.getOldValue()));
             } else if (elemDiff.isAdded()) {
-                result.append(makeStylishLine("+ ", key, elemDiff.getNewValue()));
+                result.append(makeStylishLine("  + ", key, elemDiff.getNewValue()));
             } else if (elemDiff.isRemoved()) {
-                result.append(makeStylishLine("- ", key, elemDiff.getOldValue()));
+                result.append(makeStylishLine("  - ", key, elemDiff.getOldValue()));
             } else {
-                result.append(makeStylishLine("- ", key, elemDiff.getOldValue()));
-                result.append(makeStylishLine("+ ", key, elemDiff.getNewValue()));
+                result.append(makeStylishLine("  - ", key, elemDiff.getOldValue()));
+                result.append(makeStylishLine("  + ", key, elemDiff.getNewValue()));
             }
         }
         return result.append("}").toString();
