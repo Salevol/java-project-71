@@ -3,8 +3,6 @@ import hexlet.code.utils.FileHandler;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,24 +16,26 @@ public class TestDiffer {
     private final String yamlFilepath2 = "src/test/resources/nested2.yaml";
 
     @BeforeAll
-    public static void readFiles() throws IOException {
+    public static void readFiles() throws Exception {
         expectedStylish = FileHandler.readFile("src/test/resources/expected_stylish");
         expectedPlain = FileHandler.readFile("src/test/resources/expected_plain");
         expectedJson = FileHandler.readFile("src/test/resources/expected_json");
     }
 
     @Test
-    public void testJsonFormatter() throws IOException {
+    public void testJsonFormatter() throws Exception {
         String actual = Differ.generate(jsonFilepath1, jsonFilepath2, "json");
         assertThat(actual).isEqualTo(expectedJson);
         actual = Differ.generate(yamlFilepath1, yamlFilepath2, "json");
         assertThat(actual).isEqualTo(expectedJson);
-        assertThrows(IOException.class, () -> Differ.generate("nofile1.json", "nofile2.json"));
+        assertThrows(Exception.class, () -> Differ.generate("nofile1.json", "nofile2.json"));
     }
 
     @Test
-    public void testStylishFormatter() throws IOException {
+    public void testStylishFormatter() throws Exception {
         String actual = Differ.generate(jsonFilepath1, jsonFilepath2);
+        assertThat(actual).isEqualTo(expectedStylish);
+        actual = Differ.generate(yamlFilepath1, yamlFilepath2);
         assertThat(actual).isEqualTo(expectedStylish);
         actual = Differ.generate(jsonFilepath1, jsonFilepath2, "stylish");
         assertThat(actual).isEqualTo(expectedStylish);
@@ -44,7 +44,7 @@ public class TestDiffer {
     }
 
     @Test
-    public void testPlainFormatter() throws IOException {
+    public void testPlainFormatter() throws Exception {
         String actual = Differ.generate(jsonFilepath1, jsonFilepath2, "plain");
         assertThat(actual).isEqualTo(expectedPlain);
         actual = Differ.generate(yamlFilepath1, yamlFilepath2, "plain");

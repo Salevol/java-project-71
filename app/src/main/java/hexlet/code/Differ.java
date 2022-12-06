@@ -1,38 +1,32 @@
 package hexlet.code;
 
-import hexlet.code.formatters.FormatFactory;
-import hexlet.code.parser.Parser;
-
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+
+import static hexlet.code.formatters.FormatFactory.getFormatter;
+import static hexlet.code.parsers.ParserFactory.getParser;
+import static hexlet.code.utils.FileHandler.getFileFormat;
+import static hexlet.code.utils.FileHandler.readFile;
 
 public class Differ {
 
-    public static String generate(String filePath1, String filePath2, String format) throws IOException {
-        Map<String, Object> firstFile = new LinkedHashMap<>(Parser.parse(filePath1));
-        Map<String, Object> secondFile = new LinkedHashMap<>(Parser.parse(filePath2));
-        Map<String, ElementDiff> diff = new TreeMap<>();
-        Set<String> keys = new TreeSet<>(firstFile.keySet());
-        keys.addAll(secondFile.keySet());
-        for (String key: keys) {
-            diff.put(key, new ElementDiff(checkNullValue(key, firstFile), checkNullValue(key, secondFile)));
-        }
-        Formatter formatter = FormatFactory.getFormatter(format);
+    public static String generate(String filePath1, String filePath2, String format) throws Exception {
+        String ext1 = getFileFormat(filePath1);
+        String ext2 = getFileFormat(filePath2);
+        String content1 = readFile(filePath1);
+        String content2 = readFile(filePath2);
+        Parser parser1 = getParser(ext1);
+        Parser parser2 = getParser(ext2);
+        Map<String, Object> firstFile = new LinkedHashMap<>(parser1.parse(content1));
+        Map<String, Object> secondFile = new LinkedHashMap<>(parser2.parse(content2));
+        Map<String, ElementDiff> diff = CompareMaps.compare(firstFile, secondFile);
+        Formatter formatter = getFormatter(format);
         return formatter.format(diff);
     }
-    public static String generate(String filePath1, String filePath2) throws IOException {
+
+    public static String generate(String filePath1, String filePath2) throws Exception {
         return generate(filePath1, filePath2, "stylish");
     }
-
-    private static Object checkNullValue(String key, Map map) {
-        Object value = null;
-        if (map.containsKey(key)) {
-            value = map.get(key) == null ? "null" : map.get(key);
-        }
-        return value;
-    }
 }
+
+

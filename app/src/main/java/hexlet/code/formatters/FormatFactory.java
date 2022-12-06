@@ -9,7 +9,7 @@ public class FormatFactory {
             case "stylish" -> new StylishFormatter();
             case "plain" -> new PlainFormatter();
             case "json" -> new JsonFormatter();
-            default -> throw new RuntimeException("Illegal format");
+            default -> throw new RuntimeException("Illegal format: " + format);
         };
     }
 

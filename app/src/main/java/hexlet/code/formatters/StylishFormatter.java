@@ -7,22 +7,30 @@ import java.util.Map;
 
 public final class StylishFormatter implements Formatter {
     @Override
-    public String format(final Map<String, ElementDiff> diff) {
+    public String format(final Map<String, ElementDiff> diff) throws Exception {
         StringBuilder result = new StringBuilder("{\n");
         for (String key: diff.keySet()) {
-            ElementDiff elemDiff = diff.get(key);
-            if (!elemDiff.isUpdated()) {
-                result.append(makeStylishLine("    ", key, elemDiff.getOldValue()));
-            } else if (elemDiff.isAdded()) {
-                result.append(makeStylishLine("  + ", key, elemDiff.getNewValue()));
-            } else if (elemDiff.isRemoved()) {
-                result.append(makeStylishLine("  - ", key, elemDiff.getOldValue()));
-            } else {
-                result.append(makeStylishLine("  - ", key, elemDiff.getOldValue()));
-                result.append(makeStylishLine("  + ", key, elemDiff.getNewValue()));
+            ElementDiff elem = diff.get(key);
+            switch (elem.getStatus()) {
+                case "unchanged":
+                    result.append(makeStylishLine("    ", key, elem.getOldValue()));
+                    break;
+                case "added":
+                    result.append(makeStylishLine("  + ", key, elem.getNewValue()));
+                    break;
+                case "removed":
+                    result.append(makeStylishLine("  - ", key, elem.getOldValue()));
+                    break;
+                case "changed":
+                    result.append(makeStylishLine("  - ", key, elem.getOldValue()));
+                    result.append(makeStylishLine("  + ", key, elem.getNewValue()));
+                    break;
+                default:
+                    throw new Exception("Unknown element status: " + elem.getStatus());
             }
         }
         return result.append("}").toString();
+
     }
 
     private static String makeStylishLine(String prefix, String key, Object value) {

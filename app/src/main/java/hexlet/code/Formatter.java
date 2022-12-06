@@ -4,5 +4,5 @@ import java.util.Map;
 
 public interface Formatter {
 
-    String format(Map<String, ElementDiff> diff);
+    String format(Map<String, ElementDiff> diff) throws Exception;
 }

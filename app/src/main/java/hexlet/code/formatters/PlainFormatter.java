@@ -2,28 +2,37 @@ package hexlet.code.formatters;
 
 import hexlet.code.ElementDiff;
 import hexlet.code.Formatter;
-import org.apache.commons.lang3.ClassUtils;
 
+import java.util.List;
 import java.util.Map;
 
 public final class PlainFormatter implements Formatter {
-    private static final String ADDED = "Property '%s' was added with value: %s\n";
-    private static final String REMOVED = "Property '%s' was removed\n";
-    private static final String UPDATED = "Property '%s' was updated. From %s to %s\n";
-
-
 
     @Override
-    public String format(final Map<String, ElementDiff> diff) {
+    public String format(final Map<String, ElementDiff> diff) throws Exception {
         StringBuilder result = new StringBuilder();
         for (String key: diff.keySet()) {
             ElementDiff elem = diff.get(key);
-            if (elem.isUpdated() && elem.isAdded()) {
-                result.append(String.format(ADDED, key, checkObj(elem.getNewValue())));
-            } else if (elem.isRemoved()) {
-                result.append(String.format(REMOVED, key, checkObj(elem.getOldValue())));
-            } else if (elem.isUpdated()) {
-                result.append(String.format(UPDATED, key, checkObj(elem.getOldValue()), checkObj(elem.getNewValue())));
+            switch (elem.getStatus()) {
+                case "unchanged":
+                    break;
+                case "added":
+                    result.append("Property '"
+                                    + key
+                                    + "' was added with value: "
+                                    + checkObj(elem.getNewValue()) + "\n");
+                    break;
+                case "removed":
+                    result.append("Property '" + key + "' was removed\n");
+                    break;
+                case "changed":
+                    result.append("Property '"
+                            + key + "' was updated. From "
+                            + checkObj(elem.getOldValue())
+                            + " to " + checkObj(elem.getNewValue()) + "\n");
+                    break;
+                default:
+                    throw new Exception("Unknown element status: " + elem.getStatus());
             }
         }
         return result.deleteCharAt(result.length() - 1).toString();
@@ -33,9 +42,12 @@ public final class PlainFormatter implements Formatter {
         if (value == null || value == "null") {
             return null;
         }
-        if (ClassUtils.isPrimitiveOrWrapper(value.getClass())) {
-            return value.toString();
+        if (value instanceof Map || value instanceof List) {
+            return "[complex value]";
         }
-        return (value instanceof String) ? "'" + value.toString() + "'" : "[complex value]";
+        if (value instanceof String) {
+            return "'" + value + "'";
+        }
+        return value.toString();
     }
 }
