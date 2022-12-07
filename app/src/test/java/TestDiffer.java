@@ -31,7 +31,6 @@ class TestDiffer {
         String filePath1 = "src/test/resources/nested1." + format;
         String filePath2 = "src/test/resources/nested2." + format;
 
-        // Тестируем вызов метода с каждым из фоматерров, а также вызов с форматером по умолчанию
         assertThat(Differ.generate(filePath1, filePath2))
                 .isEqualTo(expectedStylish);
 

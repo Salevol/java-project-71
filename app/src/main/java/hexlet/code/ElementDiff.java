@@ -10,10 +10,10 @@ public final class ElementDiff {
     private final Object oldValue;
     private final Object newValue;
 
-    ElementDiff(Object firstValue, Object secondValue, String status) {
+    ElementDiff(Object firstValue, Object secondValue, String elemStatus) {
         this.oldValue = firstValue;
         this.newValue = secondValue;
-        this.status = status;
+        this.status = elemStatus;
     }
 
     public String getStatus() {
