@@ -5,6 +5,11 @@ import hexlet.code.Formatter;
 
 import java.util.Map;
 
+import static hexlet.code.ElementDiff.ADDED;
+import static hexlet.code.ElementDiff.CHANGED;
+import static hexlet.code.ElementDiff.REMOVED;
+import static hexlet.code.ElementDiff.UNCHANGED;
+
 public final class StylishFormatter implements Formatter {
     @Override
     public String format(final Map<String, ElementDiff> diff) throws Exception {
@@ -12,21 +17,14 @@ public final class StylishFormatter implements Formatter {
         for (String key: diff.keySet()) {
             ElementDiff elem = diff.get(key);
             switch (elem.getStatus()) {
-                case "unchanged":
-                    result.append(makeStylishLine("    ", key, elem.getOldValue()));
-                    break;
-                case "added":
-                    result.append(makeStylishLine("  + ", key, elem.getNewValue()));
-                    break;
-                case "removed":
-                    result.append(makeStylishLine("  - ", key, elem.getOldValue()));
-                    break;
-                case "changed":
+                case UNCHANGED -> result.append(makeStylishLine("    ", key, elem.getOldValue()));
+                case ADDED -> result.append(makeStylishLine("  + ", key, elem.getNewValue()));
+                case REMOVED -> result.append(makeStylishLine("  - ", key, elem.getOldValue()));
+                case CHANGED -> {
                     result.append(makeStylishLine("  - ", key, elem.getOldValue()));
                     result.append(makeStylishLine("  + ", key, elem.getNewValue()));
-                    break;
-                default:
-                    throw new Exception("Unknown element status: " + elem.getStatus());
+                }
+                default -> throw new Exception("Unknown element status: " + elem.getStatus());
             }
         }
         return result.append("}").toString();

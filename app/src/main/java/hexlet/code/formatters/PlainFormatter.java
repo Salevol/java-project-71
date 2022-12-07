@@ -6,6 +6,11 @@ import hexlet.code.Formatter;
 import java.util.List;
 import java.util.Map;
 
+import static hexlet.code.ElementDiff.ADDED;
+import static hexlet.code.ElementDiff.CHANGED;
+import static hexlet.code.ElementDiff.REMOVED;
+import static hexlet.code.ElementDiff.UNCHANGED;
+
 public final class PlainFormatter implements Formatter {
 
     @Override
@@ -14,18 +19,18 @@ public final class PlainFormatter implements Formatter {
         for (String key: diff.keySet()) {
             ElementDiff elem = diff.get(key);
             switch (elem.getStatus()) {
-                case "unchanged":
+                case UNCHANGED:
                     break;
-                case "added":
+                case ADDED:
                     result.append("Property '"
                                     + key
                                     + "' was added with value: "
                                     + checkObj(elem.getNewValue()) + "\n");
                     break;
-                case "removed":
+                case REMOVED:
                     result.append("Property '" + key + "' was removed\n");
                     break;
-                case "changed":
+                case CHANGED:
                     result.append("Property '"
                             + key + "' was updated. From "
                             + checkObj(elem.getOldValue())

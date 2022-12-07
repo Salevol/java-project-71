@@ -1,7 +1,5 @@
 package hexlet.code;
 
-import java.util.Objects;
-
 public final class ElementDiff {
     public static final String REMOVED = "removed";
     public static final String ADDED = "added";
@@ -12,18 +10,10 @@ public final class ElementDiff {
     private final Object oldValue;
     private final Object newValue;
 
-    ElementDiff(Object firstValue, Object secondValue) {
+    ElementDiff(Object firstValue, Object secondValue, String status) {
         this.oldValue = firstValue;
         this.newValue = secondValue;
-        if (Objects.equals(firstValue, secondValue)) {
-            this.status = UNCHANGED;
-        } else if (firstValue == null) {
-            this.status = ADDED;
-        } else if (secondValue == null) {
-            this.status = REMOVED;
-        } else {
-            this.status = CHANGED;
-        }
+        this.status = status;
     }
 
     public String getStatus() {

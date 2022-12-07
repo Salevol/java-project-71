@@ -19,7 +19,7 @@ public class Differ {
         Parser parser2 = getParser(ext2);
         Map<String, Object> firstFile = new LinkedHashMap<>(parser1.parse(content1));
         Map<String, Object> secondFile = new LinkedHashMap<>(parser2.parse(content2));
-        Map<String, ElementDiff> diff = CompareMaps.compare(firstFile, secondFile);
+        Map<String, ElementDiff> diff = MapsComparator.compare(firstFile, secondFile);
         Formatter formatter = getFormatter(format);
         return formatter.format(diff);
     }
