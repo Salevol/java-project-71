@@ -25,16 +25,17 @@ public final class PlainFormatter implements Formatter {
                     result.append("Property '"
                                     + key
                                     + "' was added with value: "
-                                    + checkObj(elem.getNewValue()) + "\n");
+                                    + checkObj(elem.getValue()) + "\n");
                     break;
                 case REMOVED:
                     result.append("Property '" + key + "' was removed\n");
                     break;
                 case CHANGED:
+                    Map<String, Object> value = (Map<String, Object>) elem.getValue();
                     result.append("Property '"
                             + key + "' was updated. From "
-                            + checkObj(elem.getOldValue())
-                            + " to " + checkObj(elem.getNewValue()) + "\n");
+                            + checkObj(value.get("old"))
+                            + " to " + checkObj(value.get("new")) + "\n");
                     break;
                 default:
                     throw new Exception("Unknown element status: " + elem.getStatus());

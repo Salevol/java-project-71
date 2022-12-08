@@ -1,5 +1,6 @@
 package hexlet.code;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -16,35 +17,33 @@ public class MapsComparator {
         Map<String, ElementDiff> diff = new TreeMap<>();
         Set<String> keys = new TreeSet<>(map1.keySet());
         keys.addAll(map2.keySet());
-        Object oldValue;
-        Object newValue;
         String status;
         for (String key: keys) {
-            oldValue = checkNullValue(key, map1);
-            newValue = checkNullValue(key, map2);
-            status = checkStatus(oldValue, newValue);
-            diff.put(key, new ElementDiff(oldValue, newValue, status));
+            status = checkStatus(key, map1, map2);
+            switch (status) {
+                case UNCHANGED, REMOVED -> diff.put(key, new ElementDiff(map1.get(key), status));
+                case ADDED -> diff.put(key, new ElementDiff(map2.get(key), status));
+                case CHANGED -> {
+                    Map<String, Object> value = new LinkedHashMap<>();
+                    value.put("old", map1.get(key));
+                    value.put("new", map2.get(key));
+                    diff.put(key, new ElementDiff(value, status));
+                }
+                default -> throw new RuntimeException("Unknown status:" + status);
+            }
         }
         return diff;
     }
 
-    private static Object checkNullValue(String key, Map<String, Object> map) {
-        Object value = null;
-        if (map.containsKey(key)) {
-            value = map.get(key) == null ? "null" : map.get(key);
-        }
-        return value;
-    }
-
-    private static String checkStatus(Object oldValue, Object newValue) {
-        if (Objects.equals(oldValue, newValue)) {
+    private static String checkStatus(String key, Map<String, Object> map1, Map<String, Object> map2) {
+        if (map1.containsKey(key) && map2.containsKey(key) && Objects.equals(map1.get(key), map2.get(key))) {
             return UNCHANGED;
-        } else if (oldValue == null) {
-            return ADDED;
-        } else if (newValue == null) {
+        } else if (map1.containsKey(key) && map2.containsKey(key)) {
+            return CHANGED;
+        } else if (map1.containsKey(key)) {
             return REMOVED;
         } else {
-            return CHANGED;
+            return ADDED;
         }
     }
 }

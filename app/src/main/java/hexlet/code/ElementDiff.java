@@ -7,12 +7,10 @@ public final class ElementDiff {
     public static final String UNCHANGED = "unchanged";
 
     private final String status;
-    private final Object oldValue;
-    private final Object newValue;
+    private final Object value;
 
-    ElementDiff(Object firstValue, Object secondValue, String elemStatus) {
-        this.oldValue = firstValue;
-        this.newValue = secondValue;
+    ElementDiff(Object elemValue, String elemStatus) {
+        this.value = elemValue;
         this.status = elemStatus;
     }
 
@@ -20,11 +18,7 @@ public final class ElementDiff {
         return this.status;
     }
 
-    public Object getOldValue() {
-        return oldValue;
-    }
-
-    public Object getNewValue() {
-        return newValue;
+    public Object getValue() {
+        return value;
     }
 }

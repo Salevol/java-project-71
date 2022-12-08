@@ -17,12 +17,13 @@ public final class StylishFormatter implements Formatter {
         for (String key: diff.keySet()) {
             ElementDiff elem = diff.get(key);
             switch (elem.getStatus()) {
-                case UNCHANGED -> result.append(makeStylishLine("    ", key, elem.getOldValue()));
-                case ADDED -> result.append(makeStylishLine("  + ", key, elem.getNewValue()));
-                case REMOVED -> result.append(makeStylishLine("  - ", key, elem.getOldValue()));
+                case UNCHANGED -> result.append(makeStylishLine("    ", key, elem.getValue()));
+                case ADDED -> result.append(makeStylishLine("  + ", key, elem.getValue()));
+                case REMOVED -> result.append(makeStylishLine("  - ", key, elem.getValue()));
                 case CHANGED -> {
-                    result.append(makeStylishLine("  - ", key, elem.getOldValue()));
-                    result.append(makeStylishLine("  + ", key, elem.getNewValue()));
+                    Map<String, Object> value = (Map<String, Object>) elem.getValue();
+                    result.append(makeStylishLine("  - ", key, value.get("old")));
+                    result.append(makeStylishLine("  + ", key, value.get("new")));
                 }
                 default -> throw new Exception("Unknown element status: " + elem.getStatus());
             }
@@ -32,6 +33,7 @@ public final class StylishFormatter implements Formatter {
     }
 
     private static String makeStylishLine(String prefix, String key, Object value) {
-        return prefix + key + ": " + value.toString() + "\n";
+        value = (value == null) ? "null" : value.toString();
+        return prefix + key + ": " + value + "\n";
     }
 }
